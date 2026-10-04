@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PPCF Atlas — Personal Portfolio & Cash Flow</title>
+<meta name="description" content="PPCF Atlas is a private, on-device personal finance and investment companion for iPhone. Track accounts, receipts, budgets, and multi-asset portfolios with crisp native charts." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --bg-soft: #111727;
+    --panel: #161d33;
+    --line: #243056;
+    --text: #e9ecf6;
+    --muted: #9aa3bf;
+    --accent: #6ea8ff;
+    --accent-2: #7df0c5;
+    --gold: #f6c177;
+    --danger: #ff7a8a;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(1200px 700px at 10% -10%, rgba(110,168,255,0.15), transparent 60%),
+                radial-gradient(900px 600px at 100% 10%, rgba(125,240,197,0.10), transparent 60%),
+                var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  header.nav {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(10px);
+    background: rgba(11,15,26,0.7);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.2px; }
+  .logo {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center; color: #0b0f1a; font-weight: 800;
+  }
+  .nav-links { display: flex; gap: 22px; }
+  .nav-links a { color: var(--muted); font-size: 14px; font-weight: 500; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+  @media (max-width: 700px) { .nav-links { display: none; } }
+
+  /* Hero */
+  .hero { padding: 96px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+  .eyebrow {
+    display: inline-block; padding: 6px 12px; border-radius: 999px;
+    background: rgba(110,168,255,0.12); color: var(--accent);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase;
+    border: 1px solid rgba(110,168,255,0.25);
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 5.4vw, 64px);
+    line-height: 1.05; margin: 18px 0 16px;
+    background: linear-gradient(180deg, #ffffff, #c8d2f0);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lead { font-size: 18px; color: var(--muted); max-width: 560px; }
+  .cta-row { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 18px; border-radius: 12px; font-weight: 600; font-size: 14px;
+    border: 1px solid transparent; cursor: pointer;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0b0f1a; }
+  .btn-primary:hover { transform: translateY(-1px); text-decoration: none; }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--line); }
+  .btn-ghost:hover { background: var(--panel); text-decoration: none; }
+
+  /* Hero phone mock */
+  .phone {
+    position: relative;
+    width: 300px; height: 600px;
+    margin: 0 auto;
+    background: linear-gradient(160deg, #1a2240, #0d1326);
+    border-radius: 44px; padding: 14px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  .phone::before {
+    content: ""; position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 26px; background: #0b0f1a; border-radius: 14px;
+  }
+  .screen {
+    width: 100%; height: 100%; border-radius: 32px; overflow: hidden;
+    background: linear-gradient(180deg, #0f1530, #0b1024);
+    padding: 50px 16px 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .screen .row { display: flex; justify-content: space-between; align-items: center; }
+  .pill { padding: 4px 8px; border-radius: 6px; font-size: 10px; color: #0b0f1a; font-weight: 700; background: var(--accent-2); }
+  .stat-card {
+    background: linear-gradient(135deg, rgba(110,168,255,0.18), rgba(125,240,197,0.10));
+    border: 1px solid var(--line); border-radius: 14px; padding: 12px;
+  }
+  .stat-card .label { font-size: 11px; color: var(--muted); }
+  .stat-card .value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+  .chart {
+    flex: 1; min-height: 140px; position: relative;
+    background: linear-gradient(180deg, rgba(110,168,255,0.05), transparent);
+    border-radius: 14px; border: 1px solid var(--line); padding: 12px;
+  }
+  svg { width: 100%; height: 100%; }
+  .legend { display: flex; gap: 8px; font-size: 10px; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+  /* Sections */
+  section { padding: 72px 0; }
+  .section-title { text-align: center; margin-bottom: 48px; }
+  .section-title h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.4vw, 40px); margin: 0 0 10px;
+  }
+  .section-title p { color: var(--muted); margin: 0; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .card:hover { transform: translateY(-3px); border-color: rgba(110,168,255,0.4); }
+  .card .icon {
+    width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center;
+    background: rgba(110,168,255,0.12); color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  /* Privacy banner */
+  .privacy {
+    margin: 32px auto 0; max-width: 920px;
+    background: linear-gradient(135deg, rgba(125,240,197,0.10), rgba(110,168,255,0.08));
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
+    display: flex; gap: 18px; align-items: flex-start;
+  }
+  .privacy .badge { flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px;
+    background: rgba(125,240,197,0.15); color: var(--accent-2); display: grid; place-items: center; }
+  .privacy h4 { margin: 0 0 6px; font-size: 16px; }
+  .privacy p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  /* Support */
+  .support-card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 32px; text-align: center;
+  }
+  .support-card a.email {
+    display: inline-block; margin: 8px 0 4px;
+    font-size: 20px; font-weight: 700; color: var(--accent);
+  }
+  .support-card p { color: var(--muted); margin: 4px 0; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 0; margin-top: 40px;
+    color: var(--muted); font-size: 14px;
+  }
+  .foot-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .foot-links { display: flex; gap: 18px; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="brand">
+      <div class="logo">P</div>
+      <span>PPCF Atlas</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#support">Support</a>
+      <a href="terms.html">Terms</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Personal Portfolio &amp; Cash Flow</span>
+      <h1>Your money,<br/>mapped end to end.</h1>
+      <p class="lead">PPCF Atlas unifies everyday cash tracking with long-term portfolio monitoring on iPhone. Every account, receipt, budget, and position — in one private, on-device companion.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#support">Get Support</a>
+        <a class="btn btn-ghost" href="#features">Explore Features</a>
+      </div>
+    </div>
+
+    <div class="phone" aria-hidden="true">
+      <div class="screen">
+        <div class="row">
+          <div style="font-weight:700;font-size:13px">Net Worth</div>
+          <span class="pill">+ 4.8%</span>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Assets</div>
+          <div class="value">$ 248,915.32</div>
+        </div>
+        <div class="chart">
+          <svg viewBox="0 0 220 100" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#6ea8ff" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#6ea8ff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,80 C30,60 50,70 70,55 C90,40 110,52 130,38 C150,24 170,30 190,18 L220,12 L220,100 L0,100 Z" fill="url(#g1)"/>
+            <path d="M0,80 C30,60 50,70 70,55 C90,40 110,52 130,38 C150,24 170,30 190,18 L220,12" fill="none" stroke="#6ea8ff" stroke-width="2"/>
+            <circle cx="190" cy="18" r="3" fill="#7df0c5"/>
+          </svg>
+          <div class="legend" style="position:absolute;bottom:8px;left:12px">
+            <span><span class="dot" style="background:#6ea8ff"></span>Portfolio</span>
+            <span style="margin-left:10px"><span class="dot" style="background:#7df0c5"></span>Cash</span>
+          </div>
+        </div>
+        <div class="row">
+          <div style="font-size:11px;color:var(--muted)">Stocks · ETF · Bond · Crypto</div>
+          <div style="font-size:11px;color:var(--accent-2)">▲ Live</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-title">
+      <h2>One vault for every dollar</h2>
+      <p>From paycheck to retirement — designed for clarity, built for control.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+        </div>
+        <h3>Multi-Account Tracking</h3>
+        <p>Checking, savings, credit cards, and cash — all unified with real-time balances and clean monthly views.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M5 7v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+        </div>
+        <h3>Receipt Vault</h3>
+        <p>Capture or import receipts with the camera, then attach proof to the matching expense for fully auditable records.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <h3>Smart Budgets</h3>
+        <p>Set monthly limits by category and watch progress rings update in real time — before limits are blown.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+        </div>
+        <h3>Portfolio Engine</h3>
+        <p>Stocks, ETFs, funds, bonds, crypto, real estate — live market value, average cost basis, and unrealized P/L with a clean percentage return.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/></svg>
+        </div>
+        <h3>Native Charts</h3>
+        <p>Hand-drawn interactive line, bar, and donut charts built with Core Graphics — crisp at any scale, smooth animations, zero third-party SDKs.</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6Z"/></svg>
+        </div>
+        <h3>100% On-Device</h3>
+        <p>No accounts, no logins, no ads, no servers, and no background tracking. Your financial life stays private — inside your iPhone.</p>
+      </div>
+    </div>
+
+    <div class="privacy" id="privacy">
+      <div class="badge">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div>
+        <h4>Privacy by design, not by promise</h4>
+        <p>PPCF Atlas runs entirely on your device. We never collect, transmit, or sell your financial data. There is no telemetry, no account system, and no remote backend. Read the full <a href="privacy.html">Privacy Policy</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="support" style="padding-top:32px">
+  <div class="container">
+    <div class="section-title">
+      <h2>Support</h2>
+      <p>Real help from a real person — usually within one business day.</p>
+    </div>
+
+    <div class="support-card">
+      <div style="font-size:14px;color:var(--muted)">Support Email</div>
+      <a class="email" href="mailto:becipora79@gmail.com">becipora79@gmail.com</a>
+      <p>For bug reports, feature requests, account-recovery questions, and partnership inquiries.</p>
+      <p style="margin-top:14px">Please include your iOS version and device model so we can help faster.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container foot-row">
+    <div>© 2026 PPCF Atlas. All rights reserved.</div>
+    <div class="foot-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="mailto:becipora79@gmail.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
